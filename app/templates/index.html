@@ -1,0 +1,68 @@
+{% extends "admin.html" %}
+{% import "home_page.html" as pg %}
+{% block css %}
+<style>
+div.pagefoot {text-align:right;}
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="layui-form">
+
+    <table class="layui-table">
+        <!--<colgroup>-->
+        <!--<col width="150">-->
+        <!--<col width="150">-->
+        <!--<col width="200">-->
+        <!--<col>-->
+        <!--</colgroup>-->
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>出生日期</th>
+            <th>证件号</th>
+            <th>诊断状态</th>
+            <th>联系方式</th>
+            <th>机构名称</th>
+            <th>省份</th>
+            <th>城市</th>
+        </tr>
+        </thead>
+
+        <tbody id="tbody">
+        {% for s in page_data.items %}
+        <tr>
+            <td>{{ s.Sti_gtshmed.name }}</td>
+            {% if s.Sti_gtshmed.gender==0 %}
+            <td>女</td>
+            {% elif s.Sti_gtshmed.gender==1 %}
+            <td>男</td>
+            {% else %}
+            <td>未知</td>
+            {% endif %}
+
+            <td>{{ s.Sti_gtshmed.birth|datetime("%Y-%m-%d") }}</td>
+            <td>{{ s.Sti_gtshmed.idNo }}</td>
+            <td>{{ s.Sti_gtshmed.checkStatus }}</td>
+            <td>{{ s.Sti_gtshmed.contactWay }}</td>
+            <td>{{ s.Sti_gtshmed_device.hospital_name }}</td>
+            <td>{{ s.Sti_gtshmed_device.provice }}</td>
+            <td>{{ s.Sti_gtshmed_device.city }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagefoot">本页共{{ singal_data_count }}条数据/总共{{ data_all_count }}条数据</div>
+    <div class="box-footer clearfix">
+
+        {{ pg.page(page_data,'admin.list') }}
+    </div>
+</div>
+<ul id="biuuu_city_list"></ul>
+<div id="demo3"></div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

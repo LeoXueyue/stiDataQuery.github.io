@@ -1,0 +1,135 @@
+{% extends 'admin.html' %}
+{% block css %}
+<style>
+div.pagefoot {text-align:right;}
+</style>
+{% endblock %}
+{% block content %}
+
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+</fieldset>
+
+<div class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">开始</label>
+            <div class="layui-input-inline" id="starttime">
+                <input type="text" class="layui-input" id="test11" placeholder="{{ starttimestr }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">结束</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="test12" placeholder="{{ nowtimestr }}">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <button class="layui-btn" id="btn">查询</button>
+            </div>
+        </div>
+    </div>
+</div>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+</fieldset>
+
+<table class="layui-table" lay-even="" lay-skin="row">
+    <colgroup>
+        <col width="200">
+        <col width="150">
+        <col width="200">
+    </colgroup>
+    <thead>
+    <tr>
+        <th>日期</th>
+        <th>上传数量</th>
+        <th>详情</th>
+    </tr>
+    </thead>
+    <tbody>
+    {# {% for v in date_list %}#}
+    {% for v in page_data %}
+    <tr>
+        <td>{{ v.time }}</td>
+        <td>{{ v.count }}</td>
+        <td><a href="{{ url_for('admin.check_list',createdtime=v.time,page=1) }}">查看</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<div class="pagefoot">本页共{{ singal_data_count }}条数据/总共31条数据</div>
+<div class="box-footer clearfix">
+    <ul class="pagination pagination-sm no-margin pull-right">
+        <li><a href="{{ url_for('admin.query',page=1) }}">首页</a></li>
+        {% if page!=1 %}
+        <li><a href="{{ url_for('admin.query',page=pre_page) }}">上一页</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">上一页</a></li>
+        {% endif %}
+        {% for v in pagenum %}
+        {% if v %}
+        {% if v != page %}
+        <li><a href="{{ url_for('admin.query',page=v) }}">{{ v }}</a></li>
+        {% else %}
+        <li class="active"><a href="#">{{ v }}</a></li>
+        {% endif %}
+        {% endif %}
+
+        {#
+        <li><a href="#">3</a></li>
+        #}
+        {% endfor %}
+        {% if page!=count %}
+        <li><a href="{{ url_for('admin.query',page=next_page) }}">下一页</a></li>
+        {% else %}
+        <li class="disabled"><a href="#">下一页</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('admin.query',page=count) }}">尾页</a></li>
+    </ul>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //自定义格式
+        laydate.render({
+            elem: '#test11'
+            , format: 'yyyy-MM-dd'
+        });
+
+        laydate.render({
+            elem: '#test12'
+            , format: 'yyyy-MM-dd'
+        });
+    });
+</script>
+<script>
+    $("#btn").click(function () {
+        var startTimeValue = $("#test11").val();
+        var endTimeValue = $("#test12").val();
+        if (startTimeValue == "" && endTimeValue == "") {
+            send_start_time = $("#test11").attr('placeholder');
+            send_now_time = $("#test12").attr('placeholder');
+        }
+        else if (startTimeValue == "" && endTimeValue != "") {
+            send_start_time = $("#test11").attr('placeholder');
+            send_now_time = endTimeValue;
+        }
+        else if (startTimeValue != "" && endTimeValue == "") {
+            send_start_time = startTimeValue;
+            send_now_time = $("#test12").attr('placeholder');
+        }
+        else {
+            send_start_time = startTimeValue;
+            send_now_time = endTimeValue;
+        }
+        var send_time = send_start_time + "," + send_now_time;
+        var url = "http://127.0.0.1:5000/admin/query/list/" + send_time + "/1";
+        console.log("url", url);
+        window.location.href = url;
+        return false
+    })
+</script>
+{% endblock %}
