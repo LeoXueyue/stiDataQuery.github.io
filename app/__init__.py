@@ -7,7 +7,7 @@ def datetimeformat(value, format='%H:%M / %d-%m-%Y'):
 
 app = Flask(__name__)
 #数据库连接
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:admin123456@168.160.61.157/sti'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:admin123456@127.0.0.1/sti'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 app.config['SECRET_KEY'] = '38cf131a683246118b57b47bc5f2b481'
